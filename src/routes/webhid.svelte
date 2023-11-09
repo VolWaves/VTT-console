@@ -1,4 +1,11 @@
 <script>
+	import { IconSun } from '@tabler/icons-svelte';
+	import { IconMoon } from '@tabler/icons-svelte';
+	import { onMount } from 'svelte';
+	import { themeChange } from 'theme-change';
+	onMount(() => {
+		themeChange(false);
+	});
 	let device = null;
 
 	async function handleConnectClick() {
@@ -180,6 +187,8 @@
 	<div class="flex-1">
 		<a class="btn btn-ghost normal-case text-xl" href="#">Volwave TT</a>
 	</div>
+	<button data-set-theme="cupcake" data-act-class="hidden"><IconSun /></button>
+	<button data-set-theme="mytheme" data-act-class="hidden"><IconMoon /></button>
 	<div class="flex-none join">
 		<button type="button" class="btn btn-success join-item" on:click={handleConnectClick}
 			>连接</button
