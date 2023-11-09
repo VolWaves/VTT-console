@@ -3,8 +3,84 @@
 	import { IconMoon } from '@tabler/icons-svelte';
 	import { onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
-	onMount(() => {
+	import Chart from 'chart.js/auto';
+	let mychart;
+	let chartCanvas;
+	let chartKey = -600;
+	let chartDataCount = 0;
+	function renderChart() {
+		let ctx = chartCanvas.getContext('2d');
+		mychart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: [],
+				datasets: [
+					{
+						label: 'Batt',
+						borderColor: '#eb8f34',
+						yAxisID: 'mv',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					},
+					{
+						label: 'Temperature',
+						borderColor: '#346eeb',
+						yAxisID: 'cels',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					}
+				]
+			},
+			options: {
+				normalized: true,
+				aspectRatio: 12 / 5,
+				resizeDelay: 500,
+				interaction: {
+					intersect: false,
+					axis: 'x'
+				},
+				scales: {
+					x: {
+						type: 'linear',
+						max: 0,
+						min: -600,
+						grid: {
+							color: ['#77777780']
+						},
+						ticks: {
+							stepSize: 5
+						}
+					},
+					mv: {
+						type: 'linear',
+						display: true,
+						position: 'left',
+						suggestedMin: 2000,
+						suggestedMax: 4200,
+						grid: {
+							color: ['#777777FF', '#77777780']
+						}
+					},
+					cels: {
+						type: 'linear',
+						display: true,
+						position: 'right',
+						suggestedMin: 20,
+						suggestedMax: 40,
+						grid: {
+							drawOnChartArea: false
+						}
+					}
+				}
+			}
+		});
+	}
+	onMount(async () => {
 		themeChange(false);
+		console.log('renderChart()');
+		renderChart();
 	});
 	let device = null;
 
@@ -156,6 +232,21 @@
 				dataValue = dataType.postProc(dataValue);
 			}
 			dataType.v = dataValue;
+
+			if (dataType.name == temperatureDataSet.name) {
+				mychart.data.datasets.forEach((dataset) => {
+					if (dataset.label == dataType.name) {
+						dataset.data.push(dataValue);
+					}
+				});
+			}
+			if (dataType.name == battDataSet.name) {
+				mychart.data.datasets.forEach((dataset) => {
+					if (dataset.label == dataType.name) {
+						dataset.data.push(dataValue);
+					}
+				});
+			}
 			return dataType.name + ':[' + dataValue + ']';
 		};
 		let output = '';
@@ -165,6 +256,17 @@
 			dataFrame = getDataFrame();
 		}
 		if (output.length) {
+			chartDataCount++;
+			if (chartDataCount > 600) {
+				mychart.data.datasets.forEach((dataset) => {
+					dataset.data.shift();
+				});
+				chartDataCount -= 1;
+			} else {
+				chartKey++;
+				mychart.data.labels.push(chartKey);
+			}
+			mychart.update('none');
 			dataTypesArray = dataTypesArray;
 			// console.log(output);
 		}
@@ -198,22 +300,34 @@
 		>
 	</div>
 </div>
-
-{#if device}
-	<div class="py-24 sm:py-32">
-		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-6">
-				{#each dataTypesArray as item}
-					<div class="mx-auto flex max-w-xs flex-col gap-y-4">
-						<dt class="text-base leading-7 text-gray-600">{item.name}</dt>
-						<dd
-							class="order-first text-3xl font-semibold tracking-tight text-white-900 sm:text-5xl"
-						>
-							{#if item.print}{item.print(item)}{:else}{item.v}{/if}
-						</dd>
-					</div>
-				{/each}
-			</dl>
+<div class="flex flex-row w-full">
+	<div class="flex flex-col w-max h-max">
+		<div class="py-4">
+			<div class="mx-auto max-w-7xl px-6 lg:px-8">
+				<dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-6">
+					{#each dataTypesArray as item}
+						<div class="mx-auto flex max-w-xs flex-col gap-y-4">
+							<dt class="text-base leading-7 text-gray-600">{item.name}</dt>
+							<dd
+								class="order-first text-3xl font-semibold tracking-tight text-white-900 sm:text-5xl"
+							>
+								{#if item.print}{item.print(item)}{:else}{item.v}{/if}
+							</dd>
+						</div>
+					{/each}
+				</dl>
+			</div>
+		</div>
+		<div class="flex justify-center py-2 h-full w-full">
+			<div class="w-full px-6">
+				<canvas bind:this={chartCanvas} />
+			</div>
 		</div>
 	</div>
-{/if}
+	<div class="flex flex-col w-1/5">
+		<div class="flex w-1/2 h-1/2 border-2"></div>
+		<div class="flex w-1/2 h-1/2 border-2"></div>
+		<div class="flex w-1/2 h-1/2 border-2"></div>
+		<div class="flex w-1/2 h-1/2 border-2"></div>
+	</div>
+</div>
