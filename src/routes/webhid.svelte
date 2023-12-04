@@ -34,8 +34,10 @@
 			},
 			options: {
 				normalized: true,
+				responsive: true,
+				maintainAspectRatio: true,
 				aspectRatio: 12 / 5,
-				resizeDelay: 500,
+				resizeDelay: 300,
 				interaction: {
 					intersect: false,
 					axis: 'x'
@@ -118,7 +120,7 @@
 	}
 
 	let temperatureDataSet = {
-		name: 'Temperature',
+		name: '温度',
 		head: 0x00,
 		postfix: '℃',
 		v: 0,
@@ -136,7 +138,7 @@
 		}
 	};
 	let freqDataSet = {
-		name: 'Freq',
+		name: '输出频率',
 		head: 0x10,
 		postfix: 'Hz',
 		v: 0,
@@ -148,22 +150,22 @@
 		}
 	};
 	let peakDataSet = {
-		name: 'Peak',
+		name: '输出峰值',
 		head: 0x11,
 		v: 0
 	};
 	let currentDataSet = {
-		name: 'Current',
+		name: '输出电流',
 		head: 0x12,
 		v: 0
 	};
 	let battDataSet = {
-		name: 'Batt',
+		name: '电池电压',
 		head: 0x13,
 		v: 0
 	};
 	let ratioDataSet = {
-		name: 'DutyRatio',
+		name: '输出占空比',
 		head: 0x18,
 		postfix: '%',
 		v: 0,
@@ -176,10 +178,10 @@
 	};
 	let dataTypesArray = new Array(
 		temperatureDataSet,
-		freqDataSet,
-		peakDataSet,
 		battDataSet,
 		currentDataSet,
+		peakDataSet,
+		freqDataSet,
 		ratioDataSet
 	);
 	const dataTypes = new Map([
@@ -284,9 +286,27 @@
 			<div class="badge badge-error gap-2">未连接</div>
 		{/if}
 	</div>
-	<div class="flex-1">
+	<div class="flex-none">
 		<a class="btn btn-ghost normal-case text-xl" href="#">Volwave TT</a>
 	</div>
+
+	<div class="flex-1">
+		<div class="mx-auto max-w-7xl px-6">
+			<dl class="grid gap-x-8 text-center lg:grid-cols-6 grid-cols-3">
+				{#each dataTypesArray as item}
+					<div class="mx-auto flex max-w-xs flex-col gap-y-0">
+						<dt class="lg:text-sm text-xs leading-7 text-gray-600">{item.name}</dt>
+						<dd
+							class="order-first lg:text-2xl text-base font-semibold tracking-tight text-white-900"
+						>
+							{#if item.print}{item.print(item)}{:else}{item.v}{/if}
+						</dd>
+					</div>
+				{/each}
+			</dl>
+		</div>
+	</div>
+
 	<label class="swap swap-rotate">
 		<input type="checkbox" value="cupcake" class="theme-controller" />
 		<IconMoon class="swap-on" />
@@ -301,34 +321,22 @@
 		>
 	</div>
 </div>
-<div class="flex flex-row w-full">
-	<div class="flex flex-col w-max h-max">
-		<div class="py-4">
-			<div class="mx-auto max-w-7xl px-6 lg:px-8">
-				<dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-6">
-					{#each dataTypesArray as item}
-						<div class="mx-auto flex max-w-xs flex-col gap-y-4">
-							<dt class="text-base leading-7 text-gray-600">{item.name}</dt>
-							<dd
-								class="order-first text-3xl font-semibold tracking-tight text-white-900 sm:text-5xl"
-							>
-								{#if item.print}{item.print(item)}{:else}{item.v}{/if}
-							</dd>
-						</div>
-					{/each}
-				</dl>
-			</div>
-		</div>
+<div class="flex lg:flex-row flex-col w-full px-6">
+	<div class="flex lg:w-4/5 w-full h-max">
 		<div class="flex justify-center py-2 h-full w-full">
-			<div class="w-full px-6">
+			<div class="w-full aspect-[12/5]">
 				<canvas bind:this={chartCanvas} />
 			</div>
 		</div>
 	</div>
-	<div class="flex flex-col w-1/5">
-		<div class="flex w-1/2 h-1/2 border-2"></div>
-		<div class="flex w-1/2 h-1/2 border-2"></div>
-		<div class="flex w-1/2 h-1/2 border-2"></div>
-		<div class="flex w-1/2 h-1/2 border-2"></div>
+	<div class="flex lg:flex-col lg:gap-y-1 lg:pl-4 lg:w-1/5 flex-row gay-x-2 w-full min-h-[80px]">
+		{#each Array(4) as _, index (index)}
+			<div
+				class="skeleton flex justify-center items-center lg:w-full lg:h-1/4 w-1/4 h-full border-2"
+			>
+				<span class="loading loading-spinner loading-xs" />
+				<span>Loading...</span>
+			</div>
+		{/each}
 	</div>
 </div>
