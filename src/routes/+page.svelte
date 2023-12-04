@@ -2,4 +2,7 @@
 	import Webhid from './webhid.svelte';
 </script>
 
-<Webhid />
+<div class="min-w-[680px]">
+	<Webhid />
+</div>
+
