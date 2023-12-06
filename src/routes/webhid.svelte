@@ -119,7 +119,6 @@
 			dataFrame = getDataFrame();
 		}
 		if (output.length) {
-			// console.log(output);
 			dataUpdate(output);
 			dispatch('message', output);
 		}
@@ -127,6 +126,10 @@
 
 	function reportPaser(event) {
 		const { data, device, reportId } = event;
+		if (!hidDevice) {
+			device.close();
+			return;
+		}
 		dataPaser(new Uint8Array(data.buffer));
 	}
 </script>
