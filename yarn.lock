@@ -308,6 +308,18 @@
     svelte-hmr "^0.15.3"
     vitefu "^0.2.4"
 
+"@sveu/browser@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@sveu/browser/-/browser-1.0.1.tgz#010249601676f4110a899d72b6c942c873bd3b36"
+  integrity sha512-Mz6Vx7erVabjL+yIM/9h9lqRjEbCiIRKjH9KD1VuR3xTTJdMiljoeWph9B+shg0n2VLhY2tz8PvTu6H3eqhF8g==
+  dependencies:
+    "@sveu/shared" "^1.0.1"
+
+"@sveu/shared@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@sveu/shared/-/shared-1.0.1.tgz#b92b2c778208e4673be1c8963110a9e1f652d133"
+  integrity sha512-waMJ+UXD5NV/M7L6lmXigY9Ry9TwhcBz+QDbYsDcq92bL7nlRUeh3ckvvAnxw1Nzw0T2JeEgmvZZblHuAHJL9Q==
+
 "@tabler/icons-svelte@^2.40.0":
   version "2.40.0"
   resolved "https://registry.yarnpkg.com/@tabler/icons-svelte/-/icons-svelte-2.40.0.tgz#288760a65a8f5da45a56bc43806f6ddbd760a990"

@@ -31,6 +31,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveu/browser": "^1.0.1",
 		"@tabler/icons-svelte": "^2.40.0",
 		"chart.js": "^4.4.0",
 		"theme-change": "^2.5.0"
