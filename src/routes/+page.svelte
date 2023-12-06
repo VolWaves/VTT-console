@@ -1,6 +1,7 @@
 <script>
 	import Nav from './nav.svelte';
 	import Chart from './chartData.svelte';
+	import Controller from './controller.svelte';
 
 	import { dataTypesArray } from './dataHandler';
 	let dataTypesArrayU = dataTypesArray;
@@ -14,4 +15,6 @@
 <div class="min-w-[680px]">
 	<Nav on:message={onHidNewDataMsg} {dataTypesArrayU} bind:device />
 	<Chart {dataTypesArrayU} bind:device />
+	<div class="divider">控制台</div>
+	<Controller bind:device />
 </div>
