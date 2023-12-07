@@ -66,14 +66,14 @@
 				},
 				scales: {
 					x: {
-						type: 'linear',
-						max: 0,
-						min: -600,
+						type: 'category',
+						ticks: {
+							maxRotation: 36,
+							autoSkipPadding: 50,
+							maxTicksLimit: 60
+						},
 						grid: {
 							color: ['#77777780']
-						},
-						ticks: {
-							stepSize: 5
 						}
 					},
 					mv: {
@@ -99,10 +99,11 @@
 				}
 			}
 		});
+		chartDataClear();
 	}
 	let mychart = null;
 	let chartCanvas;
-	let chartKey = -600;
+	let chartKey = 0;
 	let chartDataCount = 0;
 	export let dataTypesArrayU;
 	$: chartDataPush(dataTypesArrayU);
@@ -115,25 +116,27 @@
 				}
 			});
 		});
-
 		chartDataCount++;
+		chartKey++;
 		if (chartDataCount > 600) {
 			mychart.data.datasets.forEach((dataset) => {
 				dataset.data.shift();
 			});
+			mychart.data.labels.shift();
+			mychart.data.labels.push(chartKey * 50 + 'ms');
 			chartDataCount -= 1;
-		} else {
-			chartKey++;
-			mychart.data.labels.push(chartKey);
 		}
 		mychart.update('none');
 	}
 	function chartDataClear() {
 		mychart.data.labels = [];
+		for (let k = 0; k < 600; k++) {
+			mychart.data.labels.push(k * 50 + 'ms');
+		}
 		mychart.data.datasets.forEach((dataset) => {
 			dataset.data = [];
 		});
-		chartKey = -600;
+		chartKey = 0;
 		chartDataCount = 0;
 		mychart.update('none');
 	}
