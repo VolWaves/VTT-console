@@ -1,11 +1,29 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import { dataTypes, dataUpdate } from './dataHandler';
+	import { onMount } from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	export let hidDevice = null;
-
 	let wantConnect = false;
+	onMount(() => {
+		navigator.hid.addEventListener('connect', ({ device }) => {
+			console.log(`HID connected: ${device.productName}`);
+			if (!hidDevice && device.vendorId == 0xcafe) {
+				wantConnect = true;
+				handleConnection();
+			}
+		});
+
+		navigator.hid.addEventListener('disconnect', ({ device }) => {
+			console.log(`HID disconnected: ${device.productName}`);
+			if (device.vendorId == 0xcafe) {
+				hidDevice = null;
+				wantConnect = false;
+				handleConnection();
+			}
+		});
+	});
 	async function handleConnection() {
 		setTimeout(async () => {
 			await handleDisconnectClick();
