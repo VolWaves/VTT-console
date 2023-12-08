@@ -51,6 +51,15 @@
 						tension: 0.4,
 						pointStyle: false,
 						data: []
+					},
+					{
+						head: 0x11,
+						label: 'Peak',
+						borderColor: '#eb6e34',
+						yAxisID: 'mv',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
 					}
 				]
 			},
@@ -58,7 +67,7 @@
 				normalized: true,
 				responsive: true,
 				maintainAspectRatio: true,
-				aspectRatio: 12 / 5,
+				aspectRatio: 3 / 1,
 				resizeDelay: 0,
 				interaction: {
 					intersect: false,
@@ -168,29 +177,31 @@
 	}
 </script>
 
-<div class="flex lg:flex-row flex-col w-full px-6 py-2">
-	<div use:observer class="flex lg:w-4/5 w-full h-max">
-		<div class="flex justify-center h-full w-full">
-			<div
-				class={mychart != null && !chartRendering
-					? 'hidden'
-					: 'skeleton flex w-full aspect-[12/5] border-2 justify-center items-center'}
-			>
-				<span class="loading loading-spinner loading-lg" />
-			</div>
-			<div class={mychart == null || chartRendering ? 'hidden' : 'w-full aspect-[12/5]'}>
-				<canvas bind:this={chartCanvas} class="max-w-full max-h-full" />
+<div class="flex justify-center w-full px-6 py-2">
+	<div class="flex lg:flex-row flex-col lg:w-[90%] w-full">
+		<div use:observer class="flex lg:w-4/5 w-full h-max">
+			<div class="flex justify-center h-full w-full">
+				<div
+					class={mychart != null && !chartRendering
+						? 'hidden'
+						: 'skeleton flex w-full aspect-[3/1] border-2 justify-center items-center'}
+				>
+					<span class="loading loading-spinner loading-lg" />
+				</div>
+				<div class={mychart == null || chartRendering ? 'hidden' : 'w-full aspect-[3/1]'}>
+					<canvas bind:this={chartCanvas} class="max-w-full max-h-full" />
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="flex lg:flex-col lg:gap-y-1 lg:pl-4 lg:w-1/5 flex-row gap-x-2 w-full min-h-[80px]">
-		{#each Array(4) as _, index (index)}
-			<div
-				class="skeleton flex justify-center items-center lg:w-full lg:h-1/4 w-1/4 h-full border-2"
-			>
-				<span class="loading loading-spinner loading-xs" />
-				<span class="pl-2">Loading...</span>
-			</div>
-		{/each}
+		<div class="flex lg:flex-col lg:gap-y-1 lg:pl-4 lg:w-1/5 flex-row gap-x-2 w-full min-h-[80px]">
+			{#each Array(3) as _, index (index)}
+				<div
+					class="skeleton flex justify-center items-center lg:w-full lg:h-1/3 w-1/4 h-full border-2"
+				>
+					<span class="loading loading-spinner loading-xs" />
+					<span class="pl-2">Loading...</span>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
