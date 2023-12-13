@@ -36,27 +36,36 @@
 				datasets: [
 					{
 						head: 0x13,
-						label: 'Batt',
-						borderColor: '#eb8f34',
+						label: '电池',
+						borderColor: '#8feb34',
 						yAxisID: 'mv',
-						tension: 0.4,
-						pointStyle: false,
-						data: []
-					},
-					{
-						head: 0x00,
-						label: 'Temperature',
-						borderColor: '#346eeb',
-						yAxisID: 'cels',
 						tension: 0.4,
 						pointStyle: false,
 						data: []
 					},
 					{
 						head: 0x11,
-						label: 'Peak',
+						label: '峰值',
 						borderColor: '#eb6e34',
 						yAxisID: 'mv',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					},
+					{
+						head: 0x12,
+						label: '电流',
+						borderColor: '#eb346a',
+						yAxisID: 'mA',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					},
+					{
+						head: 0xf0,
+						label: '功率',
+						borderColor: '#ebebeb',
+						yAxisID: 'Watt',
 						tension: 0.4,
 						pointStyle: false,
 						data: []
@@ -85,24 +94,31 @@
 							color: ['#77777780']
 						}
 					},
+					Watt: {
+						type: 'linear',
+						display: true,
+						position: 'right',
+						suggestedMin: 0,
+						suggestedMax: 25,
+						grid: {
+							drawOnChartArea: false
+						}
+					},
+					A: {
+						type: 'linear',
+						display: true,
+						position: 'right',
+						suggestedMin: -2.0,
+						suggestedMax: 10
+					},
 					mv: {
 						type: 'linear',
 						display: true,
 						position: 'left',
-						suggestedMin: 2000,
-						suggestedMax: 4200,
+						suggestedMin: 0.0,
+						suggestedMax: 4.2,
 						grid: {
 							color: ['#777777FF', '#77777780']
-						}
-					},
-					cels: {
-						type: 'linear',
-						display: true,
-						position: 'right',
-						suggestedMin: 20,
-						suggestedMax: 40,
-						grid: {
-							drawOnChartArea: false
 						}
 					}
 				}
