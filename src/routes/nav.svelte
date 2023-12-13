@@ -32,11 +32,7 @@
 
 <div class="navbar bg-base-100">
 	<div class="flex-none">
-		{#if device && device.opened}
-			<div class="badge badge-success gap-2">已连接</div>
-		{:else}
-			<div class="badge badge-error gap-2">未连接</div>
-		{/if}
+		<img src="favicon.png" class="max-h-16" alt="LOGO" />
 	</div>
 	<div class="flex-none">
 		<a class="btn btn-ghost normal-case text-xl" href="#">Volwave TT</a>
