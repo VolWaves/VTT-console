@@ -37,7 +37,7 @@ let voltPostProc = (adc) => {
 }
 let currentPostProc = (adc) => {
 	let mA = -4.07 * adc + 12610
-	if (mA < 50 && mA > -50) {
+	if (mA < 70 && mA > -70) {
 		mA = 0
 	}
 	return mA / 1000
@@ -93,6 +93,31 @@ let powerDataSet = {
 		return self.v.toFixed(1) + self.postfix
 	},
 }
+let delayDataSet = {
+	name: "点火延迟",
+	head: 0x72,
+	postfix: "ms",
+	v: 0,
+	print: (self) => {
+		return (self.v / 1000).toFixed(2) + self.postfix
+	},
+}
+let worktimeDataSet = {
+	name: "燃烧时间",
+	head: 0x74,
+	postfix: "ms",
+	v: 0,
+	print: (self) => {
+		return (self.v / 1000).toFixed(2) + self.postfix
+	},
+}
+let timestampDataSet = {
+	name: "时间戳",
+	head: 0x7f,
+	postfix: "us",
+	v: 0,
+}
+
 export let dataTypesArray = new Array(
 	temperatureDataSet,
 	battDataSet,
@@ -100,7 +125,10 @@ export let dataTypesArray = new Array(
 	peakDataSet,
 	powerDataSet,
 	freqDataSet,
-	ratioDataSet
+	ratioDataSet,
+	delayDataSet,
+	worktimeDataSet,
+	timestampDataSet
 )
 export const dataTypes = new Map([
 	[0x00, temperatureDataSet],
@@ -110,6 +138,9 @@ export const dataTypes = new Map([
 	[0x13, battDataSet],
 	[0x18, ratioDataSet],
 	[0xf0, powerDataSet],
+	[0x72, delayDataSet],
+	[0x74, worktimeDataSet],
+	[0x7f, timestampDataSet],
 ])
 export function dataUpdate(datas) {
 	datas.forEach((element) => {
