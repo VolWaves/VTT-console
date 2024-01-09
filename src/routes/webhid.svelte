@@ -58,17 +58,17 @@
 			return -1;
 		}
 		console.log('device list', device_list);
-		let dev = device_list.find((d) => d.vendorId === vid);
-		if (!dev) {
+		let hidDevice = device_list.find((d) => d.vendorId === vid);
+		if (!hidDevice) {
 			console.log('ERROR: No valid devices found');
 			return -2;
 		}
-		if (!dev.opened) {
-			await dev.open();
+		if (!hidDevice.opened) {
+			await hidDevice.open();
 		}
-		dev.oninputreport = reportPaser;
-		console.log('device opened:', dev);
-		return dev;
+		hidDevice.oninputreport = reportPaser;
+		console.log('device opened:', hidDevice);
+		return hidDevice;
 	}
 	async function openDeviceListById(vendorId) {
 		let devs = await navigator.hid.requestDevice({
@@ -79,13 +79,13 @@
 			return -1;
 		}
 		console.log('valid devices:', devs);
-		let dev = devs[0];
-		if (!dev.opened) {
-			await dev.open();
+		let hidDevice = devs[0];
+		if (!hidDevice.opened) {
+			await hidDevice.open();
 		}
-		dev.oninputreport = reportPaser;
-		console.log('device opened:', dev);
-		return dev;
+		hidDevice.oninputreport = reportPaser;
+		console.log('device opened:', hidDevice);
+		return hidDevice;
 	}
 
 	function dataPaser(data) {
@@ -101,6 +101,10 @@
 		if (data[4] != (data[2] ^ data[3])) {
 			return;
 		}
+		// function buf2hex(buffer) {
+		// 	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
+		// }
+		// console.log("hid", buf2hex(data.buffer));
 		let validDataType = (dt) => {
 			if (dataTypes.has(dt)) {
 				return dataTypes.get(dt);
@@ -127,7 +131,6 @@
 				dataValue = dataType.postProc(dataValue);
 			}
 			dataType.v = dataValue;
-
 			return { name: dataType.name, head: dataType.head, v: dataType.v };
 		};
 		let output = [];
