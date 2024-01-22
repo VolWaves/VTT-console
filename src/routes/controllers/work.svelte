@@ -108,6 +108,6 @@
 	<button
 		class={testbtn}
 		on:click={() => console.log('点火时序测试', workDurationScanStart, workDurationScanEnd)}
-		>⚠️ 点火 ⚠️</button
+		>⚠️ 扫描 ⚠️</button
 	>
 </div>
