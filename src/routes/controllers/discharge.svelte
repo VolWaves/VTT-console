@@ -51,6 +51,6 @@
 		/>
 	</div>
 	<button class={testbtn} on:click={() => console.log('放电测试', workDuration, workIntervar)}
-		>⚠️ 点火 ⚠️</button
+		>⚠️ 开始 ⚠️</button
 	>
 </div>
