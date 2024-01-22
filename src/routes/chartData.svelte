@@ -36,8 +36,8 @@
 				datasets: [
 					{
 						head: 0x13,
-						label: '电池',
-						borderColor: '#8feb34',
+						label: '电压输入',
+						borderColor: '#025f9e',
 						yAxisID: 'mv',
 						tension: 0.4,
 						pointStyle: false,
@@ -45,8 +45,8 @@
 					},
 					{
 						head: 0x11,
-						label: '峰值',
-						borderColor: '#eb6e34',
+						label: '电压输出',
+						borderColor: '#f77d02',
 						yAxisID: 'mv',
 						tension: 0.4,
 						pointStyle: false,
@@ -54,16 +54,25 @@
 					},
 					{
 						head: 0x12,
-						label: '电流',
-						borderColor: '#eb346a',
-						yAxisID: 'mA',
+						label: '电流输入',
+						borderColor: '#74029e',
+						yAxisID: 'A',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					},
+					{
+						head: 0x14,
+						label: '电流输出',
+						borderColor: '#d40000',
+						yAxisID: 'A',
 						tension: 0.4,
 						pointStyle: false,
 						data: []
 					},
 					{
 						head: 0xf0,
-						label: '功率',
+						label: '功率输出',
 						borderColor: '#ebebeb',
 						yAxisID: 'Watt',
 						tension: 0.4,
@@ -109,14 +118,14 @@
 						display: true,
 						position: 'right',
 						suggestedMin: -2.0,
-						suggestedMax: 10
+						suggestedMax: 6 
 					},
 					mv: {
 						type: 'linear',
 						display: true,
 						position: 'left',
 						suggestedMin: 0.0,
-						suggestedMax: 4.2,
+						suggestedMax: 5.0,
 						grid: {
 							color: ['#777777FF', '#77777780']
 						}
