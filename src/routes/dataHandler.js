@@ -36,14 +36,14 @@ let voltPostProc = (adc) => {
 	return mv / 1000
 }
 let currentPostProc = (adc) => {
-	let mA = -4.07 * adc + 12610
-	if (mA < 70 && mA > -70) {
+	let mA = 4.07 * adc - 12610
+	if (mA < 140 && mA > -80) {
 		mA = 0
 	}
 	return mA / 1000
 }
-let peakDataSet = {
-	name: "输出峰值",
+let voltOutDataSet = {
+	name: "输出电压",
 	head: 0x11,
 	postfix: "V",
 	v: 0,
@@ -52,8 +52,8 @@ let peakDataSet = {
 		return self.v.toFixed(2) + self.postfix
 	},
 }
-let currentDataSet = {
-	name: "输出电流",
+let currentInDataSet = {
+	name: "输入电流",
 	head: 0x12,
 	postfix: "A",
 	v: 0,
@@ -62,12 +62,22 @@ let currentDataSet = {
 		return self.v.toFixed(2) + self.postfix
 	},
 }
-let battDataSet = {
-	name: "电池电压",
+let voltInDataSet = {
+	name: "输入电压",
 	head: 0x13,
 	postfix: "V",
 	v: 0,
 	postProc: voltPostProc,
+	print: (self) => {
+		return self.v.toFixed(2) + self.postfix
+	},
+}
+let currentOutDataSet = {
+	name: "输出电流",
+	head: 0x14,
+	postfix: "A",
+	v: 0,
+	postProc: currentPostProc,
 	print: (self) => {
 		return self.v.toFixed(2) + self.postfix
 	},
@@ -85,7 +95,7 @@ let ratioDataSet = {
 	},
 }
 let powerDataSet = {
-	name: "输出功率",
+	name: "峰值功率",
 	head: 0xf0,
 	postfix: "W",
 	v: 0,
@@ -99,7 +109,7 @@ let delayDataSet = {
 	postfix: "ms",
 	v: 0,
 	print: (self) => {
-		return (self.v / 1000).toFixed(2) + self.postfix
+		return (self.v / 1000).toFixed(1) + self.postfix
 	},
 }
 let worktimeDataSet = {
@@ -108,7 +118,7 @@ let worktimeDataSet = {
 	postfix: "ms",
 	v: 0,
 	print: (self) => {
-		return (self.v / 1000).toFixed(2) + self.postfix
+		return (self.v / 1000).toFixed(0) + self.postfix
 	},
 }
 let timestampDataSet = {
@@ -120,9 +130,10 @@ let timestampDataSet = {
 
 export let dataTypesArray = new Array(
 	temperatureDataSet,
-	battDataSet,
-	currentDataSet,
-	peakDataSet,
+	voltInDataSet,
+	currentInDataSet,
+	voltOutDataSet,
+	currentOutDataSet,
 	powerDataSet,
 	freqDataSet,
 	ratioDataSet,
@@ -133,9 +144,10 @@ export let dataTypesArray = new Array(
 export const dataTypes = new Map([
 	[0x00, temperatureDataSet],
 	[0x10, freqDataSet],
-	[0x11, peakDataSet],
-	[0x12, currentDataSet],
-	[0x13, battDataSet],
+	[0x11, voltOutDataSet],
+	[0x12, currentInDataSet],
+	[0x13, voltInDataSet],
+	[0x14, currentOutDataSet],
 	[0x18, ratioDataSet],
 	[0xf0, powerDataSet],
 	[0x72, delayDataSet],
@@ -148,7 +160,7 @@ export function dataUpdate(datas) {
 			dataTypes.get(element.head).v = element.v
 		}
 	})
-	powerDataSet.v = peakDataSet.v * currentDataSet.v
+	powerDataSet.v = voltOutDataSet.v * currentInDataSet.v
 	if (freqDataSet.v > 0.0 && freqDataSet.v < 100.0) {
 		powerDataSet.v = (powerDataSet.v * freqDataSet.v) / 100
 	}
