@@ -27,7 +27,7 @@
 		await delayRun(renderChart, 50);
 	});
 	function renderChart() {
-		console.log('renderChart()');
+		// console.log('renderChart()');
 		let ctx = chartCanvas.getContext('2d');
 		mychart = new Chart(ctx, {
 			type: 'line',
@@ -36,8 +36,8 @@
 				datasets: [
 					{
 						head: 0x13,
-						label: '电池',
-						borderColor: '#8feb34',
+						label: '电压输入',
+						borderColor: '#025f9e',
 						yAxisID: 'mv',
 						tension: 0.4,
 						pointStyle: false,
@@ -45,8 +45,8 @@
 					},
 					{
 						head: 0x11,
-						label: '峰值',
-						borderColor: '#eb6e34',
+						label: '电压输出',
+						borderColor: '#f77d02',
 						yAxisID: 'mv',
 						tension: 0.4,
 						pointStyle: false,
@@ -54,16 +54,25 @@
 					},
 					{
 						head: 0x12,
-						label: '电流',
-						borderColor: '#eb346a',
-						yAxisID: 'mA',
+						label: '电流输入',
+						borderColor: '#74029e',
+						yAxisID: 'A',
+						tension: 0.4,
+						pointStyle: false,
+						data: []
+					},
+					{
+						head: 0x14,
+						label: '电流输出',
+						borderColor: '#d40000',
+						yAxisID: 'A',
 						tension: 0.4,
 						pointStyle: false,
 						data: []
 					},
 					{
 						head: 0xf0,
-						label: '功率',
+						label: '功率输出',
 						borderColor: '#ebebeb',
 						yAxisID: 'Watt',
 						tension: 0.4,
@@ -109,14 +118,14 @@
 						display: true,
 						position: 'right',
 						suggestedMin: -2.0,
-						suggestedMax: 10
+						suggestedMax: 6 
 					},
 					mv: {
 						type: 'linear',
 						display: true,
 						position: 'left',
 						suggestedMin: 0.0,
-						suggestedMax: 4.2,
+						suggestedMax: 5.0,
 						grid: {
 							color: ['#777777FF', '#77777780']
 						}
@@ -193,43 +202,17 @@
 	}
 </script>
 
-<div class="flex justify-center w-full px-6 py-2">
-	<div class="flex lg:flex-row flex-col lg:w-[90%] w-full">
-		<div use:observer class="flex lg:w-4/5 w-full h-max p-4 border-2 rounded-xl">
-			<div class="flex justify-center h-full w-full">
-				<div
-					class={mychart != null && !chartRendering
-						? 'hidden'
-						: 'skeleton flex w-full aspect-[3/1] justify-center items-center'}
-				>
-					<span class="loading loading-spinner loading-lg" />
-				</div>
-				<div class={mychart == null || chartRendering ? 'hidden' : 'w-full aspect-[3/1]'}>
-					<canvas bind:this={chartCanvas} class="max-w-full max-h-full" />
-				</div>
-			</div>
+<div use:observer class="flex lg:w-4/5 w-full h-max p-4 border-2 rounded-xl">
+	<div class="flex justify-center h-full w-full">
+		<div
+			class={mychart != null && !chartRendering
+				? 'hidden'
+				: 'skeleton flex w-full aspect-[3/1] justify-center items-center'}
+		>
+			<span class="loading loading-spinner loading-lg" />
 		</div>
-		<div class="flex lg:flex-col lg:gap-y-1 lg:pl-4 lg:w-1/5 flex-row gap-x-2 w-full min-h-[80px]">
-			<div
-				class="flex flex-col justify-center items-center lg:w-full lg:h-1/3 w-1/4 h-full border-2 rounded-xl"
-			>
-				<span>空闲 | 放电 | 充电</span>
-				<span>信号引脚配置</span>
-			</div>
-			<div
-				class="flex flex-col justify-center items-center lg:w-full lg:h-1/3 w-1/4 h-full border-2 rounded-xl"
-			>
-				<span>阻抗估计</span>
-				<span>点火延迟</span>
-				<span>点火压降</span>
-			</div>
-			<div
-				class="flex flex-col justify-center items-center lg:w-full lg:h-1/3 w-1/4 h-full border-2 rounded-xl"
-			>
-				<span>点火时间</span>
-				<span>平均功率</span>
-				<span>能量释放</span>
-			</div>
+		<div class={mychart == null || chartRendering ? 'hidden' : 'w-full aspect-[3/1]'}>
+			<canvas bind:this={chartCanvas} class="max-w-full max-h-full" />
 		</div>
 	</div>
 </div>
