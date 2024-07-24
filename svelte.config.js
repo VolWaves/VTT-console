@@ -15,10 +15,6 @@ const config = {
 			precompress: false,
 			strict: true,
 		}),
-		paths: {
-			assets: "http://REPLACEME",
-			relative: true
-		}
 	},
 	preprocess: vitePreprocess()
 };
