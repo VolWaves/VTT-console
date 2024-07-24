@@ -16,7 +16,7 @@ const config = {
 			strict: true,
 		}),
 		paths: {
-			assets: "http://REPLACEME",
+			base: process.env.NODE_ENV === 'production' ? '/'+process.env.REPO_NAME : '',
 			relative: true
 		}
 	},
