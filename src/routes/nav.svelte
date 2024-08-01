@@ -3,6 +3,7 @@
 	const dispatch = createEventDispatcher();
 	import { IconSun } from '@tabler/icons-svelte';
 	import { IconMoon } from '@tabler/icons-svelte';
+	import Favicon from '$lib/favicon.png';
 	import Webhid from './webhid.svelte';
 	import RealtimeData from './realtimeData.svelte';
 
@@ -16,7 +17,7 @@
 
 <div class="navbar bg-base-100">
 	<div class="flex-none">
-		<img src="favicon.png" class="max-h-16" alt="LOGO" />
+		<img src={Favicon} class="max-h-16" alt="LOGO" />
 	</div>
 	<div class="flex-none">
 		<a class="btn btn-ghost normal-case text-xl" href="#">Volwave TT</a>
