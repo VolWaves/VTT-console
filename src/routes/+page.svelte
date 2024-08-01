@@ -22,7 +22,7 @@
 	<div class="flex justify-center w-full px-6 py-2">
 		<div class="flex lg:flex-row flex-col lg:w-[90%] w-full">
 			<Chart {dataTypesArrayU} bind:device />
-			<Info {dataTypesArrayU}/>
+			<Info {dataTypesArrayU} />
 		</div>
 	</div>
 
