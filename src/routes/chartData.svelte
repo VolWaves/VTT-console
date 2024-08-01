@@ -118,7 +118,7 @@
 						display: true,
 						position: 'right',
 						suggestedMin: -2.0,
-						suggestedMax: 6 
+						suggestedMax: 6
 					},
 					mv: {
 						type: 'linear',
