@@ -18,6 +18,8 @@ jobs:
         run: |
           yarn install
           yarn build
+        env:
+          REPO_NAME: ${{ vars.REPO_NAME }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
