@@ -4,17 +4,11 @@
 	import { onMount } from 'svelte';
 	const dispatch = createEventDispatcher();
 
+	let hidDeviceFWVer = '';
+	let hidDeviceReady = false;
 	export let hidDevice = null;
 	let wantConnect = false;
 	onMount(() => {
-		navigator.hid.addEventListener('connect', ({ device }) => {
-			console.log(`HID connected: ${device.productName}`);
-			if (!hidDevice && device.vendorId == 0xcafe) {
-				wantConnect = true;
-				handleConnection();
-			}
-		});
-
 		navigator.hid.addEventListener('disconnect', ({ device }) => {
 			console.log(`HID disconnected: ${device.productName}`);
 			if (device.vendorId == 0xcafe) {
@@ -37,10 +31,19 @@
 	}
 	async function handleConnectClick() {
 		let ret = await openFirstDeviceById(0xcafe);
+		hidDeviceReady = false;
+		hidDeviceFWVer = '';
 		if (ret < 0) {
 			hidDevice = null;
 		} else {
 			hidDevice = ret;
+			let rand = Math.floor(Math.random() * 256);
+			hidDevice.sendReport(0, new Uint8Array([0x5e, rand, 0x5e ^ rand, 4, 0x0e, 0xad, 0xbe, 0xef]));
+			setTimeout(async () => {
+				if (!hidDeviceReady) {
+					await handleDisconnectClick();
+				}
+			}, 300);
 		}
 	}
 	async function handleDisconnectClick() {
@@ -88,30 +91,14 @@
 		return hidDevice;
 	}
 
-	function dataPaser(data) {
-		if (data.length != 64) {
-			return;
-		}
-		if (data[0] != 0x5e) {
-			return;
-		}
-		if (data[2] != (data[0] ^ data[1])) {
-			return;
-		}
-		if (data[4] != (data[2] ^ data[3])) {
-			return;
-		}
-		// function buf2hex(buffer) {
-		// 	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, '0')).join(' ');
-		// }
-		// console.log("hid", buf2hex(data.buffer));
+	function dataFrameParser(data) {
+		let idx = 6;
 		let validDataType = (dt) => {
 			if (dataTypes.has(dt)) {
 				return dataTypes.get(dt);
 			}
 			return null;
 		};
-		let idx = 5;
 		let getDataFrame = () => {
 			let dataType = validDataType(data[idx]);
 			if (!dataType) {
@@ -144,6 +131,40 @@
 			dispatch('message', output);
 		}
 	}
+	function versionFrameParser(data) {
+		let idx = 6 + 32;
+		let version = '';
+		while (data[idx] != 0x00) {
+			version += String.fromCharCode(data[idx++]);
+		}
+		console.log('version', version);
+		hidDeviceReady = true;
+		hidDeviceFWVer = version;
+	}
+	function dataParser(data) {
+		if (data.length != 64) {
+			return;
+		}
+		if (data[0] != 0x5e) {
+			return;
+		}
+		if (data[2] != (data[0] ^ data[1])) {
+			return;
+		}
+		if (data[4] != (data[2] ^ data[3])) {
+			return;
+		}
+		if (data[5] == 0x00) {
+			// data frame
+			if (hidDeviceReady) {
+				dataFrameParser(data);
+			}
+		}
+		if (data[5] == 0xfe) {
+			// version frame
+			versionFrameParser(data);
+		}
+	}
 
 	function reportPaser(event) {
 		const { data, device, reportId } = event;
@@ -151,7 +172,7 @@
 			device.close();
 			return;
 		}
-		dataPaser(new Uint8Array(data.buffer));
+		dataParser(new Uint8Array(data.buffer));
 	}
 </script>
 
