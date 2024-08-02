@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/VTT-console/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/entry/start.6f5d9810.js">
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/chunks/scheduler.ac115ab2.js">
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/chunks/singletons.df59163d.js">
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/chunks/index.41532498.js">
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/entry/app.ae638a71.js">
+		<link rel="modulepreload" href="/VTT-console/_app/immutable/chunks/index.9edfd9ac.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_ryyx2s = {
+						assets: "/VTT-console",
+						base: "/VTT-console",
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/VTT-console/_app/immutable/entry/start.6f5d9810.js"),
+						import("/VTT-console/_app/immutable/entry/app.ae638a71.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
