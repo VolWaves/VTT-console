@@ -30,7 +30,7 @@
 		}, 150);
 	}
 	async function handleConnectClick() {
-		let ret = await openFirstDeviceById(0xcafe);
+		let ret = await requestDeviceById(0xcafe);
 		hidDeviceReady = false;
 		hidDeviceFWVer = '';
 		if (ret < 0) {
@@ -83,6 +83,36 @@
 		}
 		console.log('valid devices:', devs);
 		let hidDevice = devs[0];
+		if (!hidDevice.opened) {
+			await hidDevice.open();
+		}
+		hidDevice.oninputreport = reportPaser;
+		console.log('device opened:', hidDevice);
+		return hidDevice;
+	}
+	async function requestDeviceById(vid) {
+		let device_list = await navigator.hid.getDevices();
+		try {
+			if (device_list.length == 0) {
+				console.log('ERROR: No devices found');
+				throw -1;
+			}
+			console.log('device list', device_list);
+			let hidDevice = device_list.find((d) => d.vendorId === vid);
+			if (!hidDevice) {
+				console.log('ERROR: No valid devices found');
+				throw -2;
+			}
+		} catch (error) {
+			device_list = await navigator.hid.requestDevice({
+				filters: [{ vid }]
+			});
+			if (device_list.length == 0) {
+				console.log('ERROR: No valid devices found');
+				return -1;
+			}
+		}
+		let hidDevice = device_list[0];
 		if (!hidDevice.opened) {
 			await hidDevice.open();
 		}
